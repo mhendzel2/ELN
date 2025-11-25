@@ -1,0 +1,13 @@
+flask==3.0.0
+flask-cors==4.0.0
+flask-sqlalchemy==3.1.1
+pillow==10.1.0
+numpy==1.26.2
+pandas==2.1.4
+matplotlib==3.8.2
+scikit-image==0.22.0
+biopython==1.82
+plotly==5.18.0
+python-dotenv==1.0.0
+werkzeug==3.0.1
+gunicorn==21.2.0

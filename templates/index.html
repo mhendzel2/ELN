@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electronic Lab Notebook</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-flask"></i> Electronic Lab Notebook</h1>
+            <div class="header-controls">
+                <input type="text" id="searchInput" placeholder="Search experiments..." class="search-box">
+                <button id="newExperimentBtn" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> New Experiment
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <div id="experimentsList" class="experiments-list">
+                <!-- Experiments will be loaded here -->
+            </div>
+
+            <div id="experimentDetail" class="experiment-detail" style="display: none;">
+                <!-- Experiment details will be loaded here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- New Experiment Modal -->
+    <div id="experimentModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>New Experiment</h2>
+            <form id="experimentForm">
+                <div class="form-group">
+                    <label for="expTitle">Title *</label>
+                    <input type="text" id="expTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="expResearcher">Researcher</label>
+                    <input type="text" id="expResearcher">
+                </div>
+                <div class="form-group">
+                    <label for="expDescription">Description</label>
+                    <textarea id="expDescription" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="expTags">Tags (comma-separated)</label>
+                    <input type="text" id="expTags" placeholder="e.g., microscopy, western blot">
+                </div>
+                <button type="submit" class="btn btn-primary">Create Experiment</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Image Upload Modal -->
+    <div id="imageModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Upload Image</h2>
+            <form id="imageForm">
+                <div class="form-group">
+                    <label for="imageFile">Image File *</label>
+                    <input type="file" id="imageFile" accept="image/*" required>
+                </div>
+                <div class="form-group">
+                    <label for="imageType">Image Type</label>
+                    <select id="imageType">
+                        <option value="">Select type</option>
+                        <option value="microscopy">Microscopy</option>
+                        <option value="western">Western Blot</option>
+                        <option value="cell_culture">Cell Culture</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="imageMagnification">Magnification</label>
+                    <input type="text" id="imageMagnification" placeholder="e.g., 40x">
+                </div>
+                <div class="form-group">
+                    <label for="imageScaleBar">Scale Bar (μm)</label>
+                    <input type="number" id="imageScaleBar" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="imageNotes">Notes</label>
+                    <textarea id="imageNotes" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Upload Image</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Gel Upload Modal -->
+    <div id="gelModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Upload Gel</h2>
+            <form id="gelForm">
+                <div class="form-group">
+                    <label for="gelFile">Gel Image *</label>
+                    <input type="file" id="gelFile" accept="image/*" required>
+                </div>
+                <div class="form-group">
+                    <label for="gelType">Gel Type</label>
+                    <select id="gelType">
+                        <option value="">Select type</option>
+                        <option value="sds-page">SDS-PAGE</option>
+                        <option value="agarose">Agarose</option>
+                        <option value="native">Native</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="gelLanes">Number of Lanes</label>
+                    <input type="number" id="gelLanes" min="1">
+                </div>
+                <div class="form-group">
+                    <label for="gelLabels">Lane Labels (JSON format)</label>
+                    <textarea id="gelLabels" rows="2" placeholder='["Marker", "Sample 1", "Sample 2"]'></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="gelMarker">Marker Information</label>
+                    <input type="text" id="gelMarker" placeholder="e.g., Precision Plus Protein">
+                </div>
+                <div class="form-group">
+                    <label for="gelNotes">Notes</label>
+                    <textarea id="gelNotes" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Upload Gel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Quantification Modal -->
+    <div id="quantModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add Quantification</h2>
+            <form id="quantForm">
+                <div class="form-group">
+                    <label for="quantType">Measurement Type *</label>
+                    <input type="text" id="quantType" required placeholder="e.g., Band Intensity">
+                </div>
+                <div class="form-group">
+                    <label for="quantValue">Value *</label>
+                    <input type="number" id="quantValue" step="any" required>
+                </div>
+                <div class="form-group">
+                    <label for="quantUnit">Unit</label>
+                    <input type="text" id="quantUnit" placeholder="e.g., AU, cells/mL">
+                </div>
+                <div class="form-group">
+                    <label for="quantMethod">Method</label>
+                    <input type="text" id="quantMethod" placeholder="e.g., ImageJ, manual counting">
+                </div>
+                <div class="form-group">
+                    <label for="quantNotes">Notes</label>
+                    <textarea id="quantNotes" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Quantification</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bioinformatics Modal -->
+    <div id="bioModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add Bioinformatics Analysis</h2>
+            <form id="bioForm">
+                <div class="form-group">
+                    <label for="bioType">Analysis Type *</label>
+                    <select id="bioType" required>
+                        <option value="">Select type</option>
+                        <option value="rna-seq">RNA-seq</option>
+                        <option value="genomics">Genomics</option>
+                        <option value="proteomics">Proteomics</option>
+                        <option value="chip-seq">ChIP-seq</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="bioPipeline">Pipeline/Tool</label>
+                    <input type="text" id="bioPipeline" placeholder="e.g., STAR, HISAT2">
+                </div>
+                <div class="form-group">
+                    <label for="bioVersion">Version</label>
+                    <input type="text" id="bioVersion">
+                </div>
+                <div class="form-group">
+                    <label for="bioSummary">Results Summary *</label>
+                    <textarea id="bioSummary" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="bioNotes">Notes</label>
+                    <textarea id="bioNotes" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Analysis</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
